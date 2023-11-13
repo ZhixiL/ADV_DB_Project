@@ -1,0 +1,1 @@
+This project for COP5725-Fall 2023 includes the reimplementation of the BD-Anchor in Java mentioned in the paper "Text Indexing for Long Paterns: Anchors are All you Need" by Lorraine A. K. Ayad, Grigorios Loukides, and Solon P. Pissis.
