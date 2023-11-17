@@ -7,6 +7,7 @@
 #include <sdsl/bit_vectors.hpp>                                   // include header for bit vectors
 #include <sdsl/rmq_support.hpp>	
 #include <sdsl/io.hpp>
+#include "zlteam_re-imp_2.hpp"
 
 using namespace std;
 using namespace sdsl;
@@ -71,18 +72,19 @@ INT minlexrot( string &X, INT *f, INT n)
 /* Computes the length of lcp of two suffixes of two strings */
 INT lcp ( string & x, INT M, string & y, INT l )
 {
-	INT xx = x.size();
-	if ( M >= xx ) return 0;
-	INT yy = y.size();
-	if ( l >= yy ) return 0;
+	return lcp_zlteam(x, M, y, l);
+	// INT xx = x.size();
+	// if ( M >= xx ) return 0;
+	// INT yy = y.size();
+	// if ( l >= yy ) return 0;
 
-	INT i = 0;
-	while ( ( M + i < xx ) && ( l + i < yy ) )
-	{
-		if ( x[M+i] != y[l+i] )	break;
-		i++;
-	}
-	return i;
+	// INT i = 0;
+	// while ( ( M + i < xx ) && ( l + i < yy ) )
+	// {
+	// 	if ( x[M+i] != y[l+i] )	break;
+	// 	i++;
+	// }
+	// return i;
 }
 
 /* Searching a list of strings using LCP from "Algorithms on Strings" by Crochemore et al. Algorithm takes O(m + log n), where n is the list size and m the length of pattern */
