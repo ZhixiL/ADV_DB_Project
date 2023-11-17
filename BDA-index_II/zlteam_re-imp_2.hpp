@@ -32,3 +32,4 @@ INT lcp_zlteam ( string & s1, INT s1end, string & s2, INT s2start )
     }
     return 0;
 }
+
