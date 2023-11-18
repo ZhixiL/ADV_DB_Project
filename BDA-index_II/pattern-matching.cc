@@ -72,6 +72,7 @@ INT minlexrot( string &X, INT *f, INT n)
 /* Computes the length of lcp of two suffixes of two strings */
 INT lcp ( string & x, INT M, string & y, INT l )
 {
+	// Replace with the rewritten funciton.
 	return lcp_zlteam(x, M, y, l);
 	// INT xx = x.size();
 	// if ( M >= xx ) return 0;
