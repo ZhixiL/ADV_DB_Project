@@ -78,8 +78,8 @@ INT bd_anchors(  unsigned char * seq, INT pos, INT ell, INT k, unordered_set<INT
 	/* Compute the LCP array for block */
 	if( LCParray( seq, n, SA, invSA, LCP ) != 1 )
 	{
-	        fprintf(stderr, " Error: LCP computation failed.\n" );
-	        exit( EXIT_FAILURE );
+		fprintf(stderr, " Error: LCP computation failed.\n" );
+		exit( EXIT_FAILURE );
 	}
 
 
@@ -153,7 +153,8 @@ INT bd_anchors(  unsigned char * seq, INT pos, INT ell, INT k, unordered_set<INT
 		
 		i++;
 	
-		/* Filter draws if there are more than one minimum rank, otherwise only one potential bd-anchor in window */			
+		/* Filter draws if there are more than one minimum rank, otherwise 
+		only one potential bd-anchor in window */			
 		if( minimizers.size() > 1 )
 		{ 	
 			

@@ -59,13 +59,17 @@ INT red_minlexrot_zlteam( string &X, INT strLength){           //find lexicograp
 // This is the re-implemented bd_anchor compute function that is mentioned in paper section 4.1 and 
 // partly 4.2. We have retained all the parameters to ensure that this function can be properly called
 // by the original construct of the program. We wrote this function based on the thorems, images, as well
-// as the original code.
+// as the original code. Certain logics we have opted to do it the original code's way if we found out that
+// it may impact the potential computation complexity by a huge margin. Others like the initialization that
+// Lorraine et al. importd from other people's work we will keep the same thing as they will not be the core
+// objective of this project.
 // To further demonstrate our understanding we will write out the comments for each of the sections as we
 // implement.
 INT bd_anchors_zlteam(unsigned char * seq, INT pos, INT w, INT k, 
                       unordered_set<INT> &anchors, INT * SA, INT * LCP, INT * invSA, INT * rank)
 {
-    // Initial setup
+    // Initial setup 
+    // --- IMPORTED FROM ORIGINAL CODE ---
     // Suffix Array computation with sorting algorithm from divsufsort.h, thus
     // the implementation is identical to the orignal paper Lorraine et al.
     INT n = strlen ( (char*) seq );
@@ -84,12 +88,38 @@ INT bd_anchors_zlteam(unsigned char * seq, INT pos, INT w, INT k,
           	exit( EXIT_FAILURE );
   	}
 	#endif
+    // a common way to invert suffix array that tells you the position 
+    // of each suffix in the sorted list of suffixes
+	for ( INT i = 0; i < n; i ++ ) 
+        invSA [SA[i]] = i;
+    // As the LCParray function is not part of this paper's contribution, we will not 
+    // reimplement it. This portion essentially setup the empty input array of LCP to
+    // containing the longest common prefixes. 
+	if( LCParray( seq, n, SA, invSA, LCP ) != 1 )
+	{
+		fprintf(stderr, " Error: LCP computation failed.\n" );
+		exit( EXIT_FAILURE );
+	}
+    // --- END OF IMPORTING ORIGINAL CODE ---
 
     // (w, k)-minimizer setup
-
+    // min_rank is using the same rank struct as provided and the deque to ensure random
+    // access time. We didn't use other data type as that will greatly affect the 
+    // thoretical computation time.
+    deque<pair<INT,utils::Rank>> minimizer_rankings;
+    // minimizer that acts as a superset to bd-anchors, as its easier to compute minimizer than 
+    // bd-anchors the author decided to use this instead.
+    // We also opted to use deque instead of the original vector as it will be more efficient for
+    // push_back even if it's slightly, and provides the same O(1) time for accessing elements.
+    deque<utils::Rank> minimizer;
 
     // utilizing (w, k)-minimizer instead of anchors (as it is a superset for reduced bd-anchors)
     // such that it can be used to compute reduced l-most bd anchors. 
+
+    // if we have a draw in rank, this if statement deals with it.
+    if (minimizer.size() > 1) {
+        
+    }
 
     // Used LCP to compare anchored rotations for fragment of input string S
 }
