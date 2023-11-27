@@ -1,3 +1,6 @@
+#ifndef ZLTEAM
+#define ZLTEAM
+
 #include "stream.h"
 #include "uint40.h"
 #include <math.h>
@@ -67,8 +70,7 @@ INT red_minlexrot_zlteam( string &X, INT strLength){           //find lexicograp
 // objective of this project.
 // To further demonstrate our understanding we will write out the comments for each of the sections as we
 // implement.
-INT bd_anchors_zlteam(unsigned char * seq, INT pos, INT w, INT k, 
-                      unordered_set<INT> &anchors, INT * SA, INT * LCP, INT * invSA, INT * rank)
+INT bd_anchors_zlteam(unsigned char * seq, INT pos, INT w, INT k, unordered_set<INT> &anchors, INT * SA, INT * LCP, INT * invSA, INT * rank)
 {
     // Initial setup 
     // --- IMPORTED FROM ORIGINAL CODE ---
@@ -274,8 +276,6 @@ void build_RSA_RLCP_zlteam ( unordered_set<INT> &anchors, INT n, INT * RSA, INT 
         // they only take O(1) memory space, on which we don't need to store the entire SA/LCP.
         if (SA_deq.size() > 2) SA_deq.pop_front();
 
-        // auto it = anchors.find((n-1) - SA_deq[i]);
-        // if (it != anchors.end() ) {
         // "find if SA[i] exist in our anchors hash table"
         if (anchors.find(SA_deq.back()) != anchors.end())
         {
@@ -307,7 +307,8 @@ void build_RSA_RLCP_zlteam ( unordered_set<INT> &anchors, INT n, INT * RSA, INT 
 }
 
 // For building the LSA and LLCP, we build it with reverse version of the original input, on which the only
-// difference is how we access the elements in anchors.
+// difference is how we access the elements in anchors, as the SA and LCP that we got is already reversed
+// from author's other portion of the code in main().
 void build_LSA_LLCP_zlteam ( unordered_set<INT> &anchors, INT n, INT * LSA, INT * LLCP, INT ram_use, char * sa_fname, char * lcp_fname )
 {
     // Same initial setup as the right direction construction
@@ -362,3 +363,6 @@ void build_LSA_LLCP_zlteam ( unordered_set<INT> &anchors, INT n, INT * LSA, INT 
     delete(LCP);
     delete(SA);
 }
+
+
+#endif

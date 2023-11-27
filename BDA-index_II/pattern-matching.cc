@@ -14,6 +14,8 @@ using namespace sdsl;
 
 INT red_minlexrot( string &X, INT *f, INT n, INT r )
 {  
+	// return red_minlexrot_zlteam(X, n)
+
 	INT n_d = n<<1;
   	for(INT i = 0; i < n_d; ++i)	f[i] = (INT) -1;
 
@@ -74,6 +76,7 @@ INT lcp ( string & x, INT M, string & y, INT l )
 {
 	// Replace with the rewritten funciton.
 	return lcp_zlteam(x, M, y, l);
+	
 	// INT xx = x.size();
 	// if ( M >= xx ) return 0;
 	// INT yy = y.size();

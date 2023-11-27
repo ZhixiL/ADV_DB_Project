@@ -8,6 +8,7 @@
 #include <sdsl/bit_vectors.hpp>                                   // include header for bit vectors
 #include <sdsl/rmq_support.hpp>	
 #include <sdsl/io.hpp>
+#include "zlteam_re-imp_2.hpp"
 
 using namespace std;
 
@@ -502,8 +503,10 @@ int main(int argc, char **argv)
 			int out=system(commande);
 		}
 		
-	  	right_compacted_trie ( text_anchors, n, RSA, RLCP, g, ram_use, sa_fname, lcp_fname );
-	  	
+	  	// right_compacted_trie ( text_anchors, n, RSA, RLCP, g, ram_use, sa_fname, lcp_fname );
+	  	build_RSA_RLCP_zlteam(text_anchors, n, RSA, RLCP, ram_use, sa_fname, lcp_fname)
+
+
 	  	ofstream rsa_output;
 		rsa_output.open(index_name_0);
 		
@@ -670,7 +673,8 @@ int main(int argc, char **argv)
 			int out_reverse=system(commande_reverse);
 		}
 		
-		left_compacted_trie ( text_anchors, n, LSA, LLCP, g, ram_use, sa_fname_reverse, lcp_fname_reverse );
+		// left_compacted_trie ( text_anchors, n, LSA, LLCP, g, ram_use, sa_fname_reverse, lcp_fname_reverse );
+		build_LSA_LLCP_zlteam(text_anchors, n, LSA, LLCP, ram_use, sa_fname_reverse, lcp_fname_reverse);
   		
   		
   		ofstream lsa_output;
