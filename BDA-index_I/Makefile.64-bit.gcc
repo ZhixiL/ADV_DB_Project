@@ -33,8 +33,16 @@ $(OBJ): $(MF) $(HD)
  
 clean: 
 	rm -f $(OBJ) $(EXE) *~
+	rm *.lcp5
+	rm *.sa5
+	rm index.*
+	rm out
 
 clean-all: 
 	rm -f $(OBJ) $(EXE) *~
 	rm -r libsdsl
 	rm -r sdsl-lite
+	rm *.lcp5
+	rm *.sa5
+	rm index.*
+	rm out

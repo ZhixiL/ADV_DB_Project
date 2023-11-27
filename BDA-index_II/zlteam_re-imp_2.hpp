@@ -245,7 +245,7 @@ INT bd_anchors_zlteam(unsigned char * seq, INT pos, INT w, INT k, unordered_set<
 // the original implementation due to the code logic is not that complex, so to show our understanding
 // we will attempt to make changes that will hopefully make the code more efficient, and comment as much
 // as we can.
-void build_RSA_RLCP_zlteam ( unordered_set<INT> &anchors, INT n, INT * RSA, INT * RLCP, INT ram_use, char * sa_fname, char * lcp_fname ) {
+void build_RSA_RLCP_zlteam (unordered_set<INT> &anchors, INT n, INT * RSA, INT * RLCP, INT ram_use, char * sa_fname, char * lcp_fname) {
     /* Since the SA and LCP are residing in EM (disk) now, we read them and then store them to memory */
     // As this portion just read off the disk file to obtain SA and LCP, with no technical merit,
     // we will not re-implement but rather reuse the original construct.
@@ -254,24 +254,25 @@ void build_RSA_RLCP_zlteam ( unordered_set<INT> &anchors, INT n, INT * RSA, INT 
 
     // Following code are implemented based on the paper description:
     deque<INT> SA_deq;
-    // deque<INT> LCP_deq;
     INT curLCP = 0;
     // Attempted to optimize by reading the SA and LCP at once to save read operations, but this breaks
     // the purpose that SA/LCP will have to take spaces on memory again, on which the author did sequential
     // read to make sure they only take O(1) time, so this way is removed.
+	// deque<INT> LCP_deq;
     // for (INT i = 0; i <=n; ++i) {
     //     SA_deq.push_back(SA->read());
-    //     LCP_deq.push_back(LCP->read());
+    //     LCP_deq.push_back(LCP->read());	
     // }
     
     // As our RLCP will be different from LCP, we need a value that keep track of the actual previous 
     // LCP between i and i-1 when we meet discontinuity, so we make use of this variable.
     INT recordLCP = n;
+	INT RPos = 0; // trackers where we at for RSA & RLCP as they will be shorter than SA/LCP
     // set the default value for RLCP's first element, because there's no previous index to compare with.
     RLCP[0] = 0; 
     // Now we carry out sampling with SA and LCP against hashtable (anchors) from bda_compute,
     // Such that we can build the RSA and RLCP array.
-    for (INT i = 0; i <= n; ++i) {
+    for (INT i = 0; i <= n; i++) {
         // sequentially read SA and LCP
         SA_deq.push_back(SA->read());
         curLCP = LCP->read();
@@ -283,21 +284,22 @@ void build_RSA_RLCP_zlteam ( unordered_set<INT> &anchors, INT n, INT * RSA, INT 
         if (anchors.find(SA_deq.back()) != anchors.end())
         {
             // "if so, we set RSA[i] = SA[i]."
-            RSA[i] = SA_deq.back();
+            RSA[RPos] = SA_deq.back();
             // "It is also well known that for any i1 < i2 the length of the LCP between S[SA[i1] .. n] 
             // and S[SA[i2] .. n] is the minimum value lying in LCP[i1 + 1], . . . , LCP[i2]." 
-            if (i > 0) { // Since we want to compare past of SA and RSA, we can't use 0.
+            if (RPos > 0) { // Since we want to compare past of SA and RSA, we can't use 0.
                 // "Since we scan also the LCP array simultaneously, we maintain the value we 
                 // need to store in RLCP[i]."
-                if (RSA[i-1] == SA_deq.front()) { 
-                    RLCP[i] = curLCP; // if prev SA is in anchor too, the following LCP will be the same.
+                if (RSA[RPos-1] == SA_deq.front()) { 
+                    RLCP[RPos] = curLCP; // if prev SA is in anchor too, the following LCP will be the same.
                 } else {
                     // But if they are not continuous, we need to use the recorded LCP 
                     // We used comparison instead of std::min as we believe this is faster.
-                    RLCP[i] = recordLCP < curLCP ? recordLCP : curLCP;
+                    RLCP[RPos] = recordLCP < curLCP ? recordLCP : curLCP;
                 }
             }
             recordLCP = n; // as recordLCP may be modified later, we modify reset it.
+			RPos++;
         } else {
             // memorize the current longest common prefix length.
             recordLCP = recordLCP < curLCP ? recordLCP : curLCP; 
@@ -305,8 +307,8 @@ void build_RSA_RLCP_zlteam ( unordered_set<INT> &anchors, INT n, INT * RSA, INT 
     }
 
     // garbage collection.
-    delete(LCP);
     delete(SA);
+	delete(LCP);
 }
 
 // For building the LSA and LLCP, we build it with reverse version of the original input, on which the only
@@ -322,6 +324,7 @@ void build_LSA_LLCP_zlteam ( unordered_set<INT> &anchors, INT n, INT * LSA, INT 
     INT recordLCP = n;
     // set the default value for LLCP's first element, because there's no previous index to compare with.
     LLCP[0] = 0; 
+	INT LPos = 0;
 
     // Now we carry out sampling with SA and LCP against hashtable (anchors) from bda_compute,
     // Such that we can build the LSA and LLCP array.
@@ -341,21 +344,22 @@ void build_LSA_LLCP_zlteam ( unordered_set<INT> &anchors, INT n, INT * LSA, INT 
         if (anchors.find((n-1)-SA_deq.back()) != anchors.end())
         {
             // "if so, we set RSA[i] = SA[i]." replace with LSA.
-            LSA[i] = SA_deq.back();
+            LSA[LPos] = SA_deq.back();
             // "It is also well known that for any i1 < i2 the length of the LCP between S[SA[i1] .. n] 
             // and S[SA[i2] .. n] is the minimum value lying in LCP[i1 + 1], . . . , LCP[i2]." 
             if (i > 0) { // Since we want to compare past of SA and LSA, we can't use 0.
                 // "Since we scan also the LCP array simultaneously, we maintain the value we 
                 // need to store in RLCP[i]." Replace with LLCP.
-                if (LSA[i-1] == SA_deq.front()) { 
-                    LLCP[i] = curLCP; // if prev SA is in anchor too, the following LCP will be the same.
+                if (LSA[LPos-1] == SA_deq.front()) { 
+                    LLCP[LPos] = curLCP; // if prev SA is in anchor too, the following LCP will be the same.
                 } else {
                     // But if they are not continuous, we need to use the recorded LCP 
                     // We used comparison instead of std::min as we believe this is faster.
-                    LLCP[i] = recordLCP < curLCP ? recordLCP : curLCP;
+                    LLCP[LPos] = recordLCP < curLCP ? recordLCP : curLCP;
                 }
             }
             recordLCP = n; // as recordLCP may be modified later, we modify reset it.
+			LPos++;
         } else {
             // memorize the current longest common prefix length.
             recordLCP = recordLCP < curLCP ? recordLCP : curLCP; 
@@ -366,6 +370,5 @@ void build_LSA_LLCP_zlteam ( unordered_set<INT> &anchors, INT n, INT * LSA, INT 
     delete(LCP);
     delete(SA);
 }
-
 
 #endif
