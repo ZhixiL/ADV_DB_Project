@@ -7,30 +7,10 @@
 #include <sdsl/bit_vectors.hpp>                                   // include header for bit vectors
 #include <sdsl/rmq_support.hpp>	
 #include <sdsl/io.hpp>
-// #include "zlteam_re-imp_2.hpp"
+#include "zlteam_re-imp_2.hpp"
 
 using namespace std;
 using namespace sdsl;
-
-INT lcp_zlteam ( string & s1, INT s1end, string & s2, INT s2start )
-{
-    // clear out the edge case where s1end as well as s2start is not in range.
-    if (s1end < 0 || s2start >= s2.size())
-        return 0;
-
-    // Simply match one by one to find the longest common prefix.
-    INT init_s2start = s2start;
-    while (s1end >= 0 && s2start < s2.size()) {
-        if (s1[s1end] == s2[s2start]) {
-            --s1end;
-            ++s2start;
-        } else {
-            return s2start - init_s2start;
-        }
-    }
-    return 0;
-}
-
 
 INT red_minlexrot( string &X, INT *f, INT n, INT r )
 {  
