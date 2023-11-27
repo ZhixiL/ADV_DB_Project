@@ -37,6 +37,8 @@ INT lcp_zlteam ( string & s1, INT s1end, string & s2, INT s2start )
     return 0;
 }
 
+/*
+
 INT red_minlexrot_zlteam( string &X, INT strLength){           //find lexicographically minimum rotation, return startPos which is the starting position of the LMR
     INT startPos = 0;
     string curMax = x;
@@ -231,6 +233,7 @@ INT bd_anchors_zlteam(unsigned char * seq, INT pos, INT w, INT k, unordered_set<
     return 0;
 }
 
+*/
 
 /* We ignore step 2 as the step 2 only involves in using external memories to build SA & LCP array */
 

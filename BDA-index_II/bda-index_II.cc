@@ -504,7 +504,7 @@ int main(int argc, char **argv)
 		}
 		
 	  	// right_compacted_trie ( text_anchors, n, RSA, RLCP, g, ram_use, sa_fname, lcp_fname );
-	  	build_RSA_RLCP_zlteam(text_anchors, n, RSA, RLCP, ram_use, sa_fname, lcp_fname)
+	  	build_RSA_RLCP_zlteam(text_anchors, n, RSA, RLCP, ram_use, sa_fname, lcp_fname);
 
 
 	  	ofstream rsa_output;
