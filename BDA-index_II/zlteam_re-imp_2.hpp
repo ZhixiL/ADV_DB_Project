@@ -37,9 +37,9 @@ INT lcp_zlteam ( string & s1, INT s1end, string & s2, INT s2start )
     return 0;
 }
 
-/*
 
-INT red_minlexrot_zlteam( string &X, INT strLength){           //find lexicographically minimum rotation, return startPos which is the starting position of the LMR
+
+INT red_minlexrot_zlteam( string &x, INT *f, INT n, INT r){           //find lexicographically minimum rotation, return startPos which is the starting position of the LMR
     INT startPos = 0;
     string curMax = x;
     for (INT i = 0; i < n; i++){
@@ -72,6 +72,7 @@ INT red_minlexrot_zlteam( string &X, INT strLength){           //find lexicograp
 // objective of this project.
 // To further demonstrate our understanding we will write out the comments for each of the sections as we
 // implement.
+
 INT bd_anchors_zlteam(unsigned char * seq, INT pos, INT w, INT k, unordered_set<INT> &anchors, INT * SA, INT * LCP, INT * invSA, INT * rank)
 {
     // Initial setup 
@@ -127,7 +128,7 @@ INT bd_anchors_zlteam(unsigned char * seq, INT pos, INT w, INT k, unordered_set<
     rank[SA[0]] = rank_count;
 
     for (INT j = 1; j < n; j++){
-        rank_count += (LCP[j] < k)
+        rank_count += (LCP[j] < k);
         rank[SA[j]] = rank_count;
     }
     INT fragLength  = w - k - 1;
@@ -136,19 +137,19 @@ INT bd_anchors_zlteam(unsigned char * seq, INT pos, INT w, INT k, unordered_set<
 
     for (INT i = 0; i < fragLength; i++){
         while (!minimizer_rankings.empty() && rank[i] < minimizer_rankings.back().first){
-            minimizer_rankings.pop_back()
+            minimizer_rankings.pop_back();
         }
         utils::Rank bd{.start_pos = i, .rank_pos = i};
         minimizer_rankings.emplace_back(rank[i], std::move(bd));
     }
 
     for (INT j = 0; j <= n - w; j++){
-        while (!minimizer_rankings.empty() && rank[i] < minimizer_rankings.back().first){
-            minimizer_rankings.pop_back()
+        while (!minimizer_rankings.empty() && rank[fragLength] < minimizer_rankings.back().first){
+            minimizer_rankings.pop_back();
         }
-        utils::Rank bd{.start_pos = i, .rank_pos = i};
-        minimizer_rankings.emplace_back(rank[i], std::move(bd));
-        while (!minimizer_rankings.empty() && minimizer_rankings.front().second.start_pos <= fragLengh - w + k)
+        utils::Rank bd{.start_pos = fragLength, .rank_pos = fragLength};
+        minimizer_rankings.emplace_back(rank[fragLength], std::move(bd));
+        while (!minimizer_rankings.empty() && minimizer_rankings.front().second.start_pos <= fragLength - w + k)
             minimizer_rankings.pop_front();
 
         if (!minimizer_rankings.empty())
@@ -170,7 +171,7 @@ INT bd_anchors_zlteam(unsigned char * seq, INT pos, INT w, INT k, unordered_set<
             //first query: find h1 = LCP of F[i .. |F|] and F[j .. |F|]. If h1 < |F| - j + 1 (dist_end), we will compare F[i+h1] and F[j+h1] for the answer otherwise queue query 2
             INT bestCandidate = 0;
             for (INT i = 1; i < minimizers.size(); i++){
-                INT dist_end = min(j + w - max(minimizer[i].rank_pos, minimizer[bestCandidate].rank_pos), w);
+                INT dist_end = min(j + w - max(minimizers[i].rank_pos, minimizers[bestCandidate].rank_pos), w);
                 INT h1 = 0;
                 INT curPos = minimizers[i].rank_pos;            
                 INT bestPos = minimizers[bestCandidate].rank_pos;
@@ -233,7 +234,6 @@ INT bd_anchors_zlteam(unsigned char * seq, INT pos, INT w, INT k, unordered_set<
     return 0;
 }
 
-*/
 
 /* We ignore step 2 as the step 2 only involves in using external memories to build SA & LCP array */
 
