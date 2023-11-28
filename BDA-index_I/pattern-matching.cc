@@ -41,7 +41,7 @@ INT lcs_zlteam(string & x, INT x_end, string & y, INT y_start)
     // Now we iteratively checks for longest common suffix, 
     for (INT i = 0; i < bound; i++) {
         if (x[x_end-i] != y[y_start+i]) {
-            return i
+            return i;
         }
     }
     // all suffixes in x matched with y, we have the longest matching.
