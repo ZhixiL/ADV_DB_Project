@@ -12,7 +12,7 @@ using namespace std;
 using namespace sdsl;
 
 
-/* ------ FOLLOWING ARE DEDICATED FOR STEP 1: BDA-COMPUTE ------ */ 
+/* ------ FOLLOWING ARE DEDICATED FOR STEP 0: Helpers ------ */ 
 // This is the function necessary for the pattern matching that occured during BDA-Compute on which 
 // it is able to compute the longest common prefix.
 INT lcp_zlteam ( string & x, INT x_begin, string & y, INT y_begin )
@@ -35,7 +35,7 @@ INT lcp_zlteam ( string & x, INT x_begin, string & y, INT y_begin )
 INT lcs_zlteam(string & x, INT x_end, string & y, INT y_start)
 {
     // setup bound for how many char we test at most
-    INT bound = std::min(x_end + 1, (int)y.size() - y_start);
+    INT bound = std::min(x_end + 1, (INT)y.size() - y_start);
     // check for corner cases where we can't match at all;
     if (bound <= 0) return 0;
     // Now we iteratively checks for longest common suffix, 
