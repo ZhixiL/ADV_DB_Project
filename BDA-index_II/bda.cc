@@ -107,26 +107,30 @@ INT bd_anchors_zlteam(unsigned char * seq, INT pos, INT w, INT k, unordered_set<
         rank[SA[j]] = rank_count;
     }
     INT fragLength  = w - k - 1;
-
-    //start by sorting the letters of F and assigning it a rank in {1 ... 2l} accordingly, compute reduced BD-Anchors and then use three LCP queries to identify lexi smallest rotation
-
+    //iterate through the first fragment with fragment size being w-k-1 (w,k) minimizer length
     for (INT i = 0; i < fragLength; i++){
+	//remove elements from the back if the current rank is smaller so its in ascending order
         while (!minimizer_rankings.empty() && rank[i] < minimizer_rankings.back().first){
             minimizer_rankings.pop_back();
         }
+	//create a potential bd and add it to the minimizer rankings
         utils::Rank bd{.start_pos = i, .rank_pos = i};
         minimizer_rankings.emplace_back(rank[i], std::move(bd));
     }
 
+    //iterate through the remaining fragments and perform the same actions
     for (INT j = 0; j <= n - w; j++){
         while (!minimizer_rankings.empty() && rank[fragLength] < minimizer_rankings.back().first){
             minimizer_rankings.pop_back();
         }
         utils::Rank bd{.start_pos = fragLength, .rank_pos = fragLength};
         minimizer_rankings.emplace_back(rank[fragLength], std::move(bd));
-        while (!minimizer_rankings.empty() && minimizer_rankings.front().second.start_pos <= fragLength - w + k)
+        
+	//remove elements from the front of minimizer rankings if its outside of the current fragment
+ 	while (!minimizer_rankings.empty() && minimizer_rankings.front().second.start_pos <= fragLength - w + k)
             minimizer_rankings.pop_front();
-
+	
+	//populate the minimizer deque with potential bd anchors with minimum rank
         if (!minimizer_rankings.empty())
         {
             INT minVal = minimizer_rankings.front().first;
@@ -146,10 +150,13 @@ INT bd_anchors_zlteam(unsigned char * seq, INT pos, INT w, INT k, unordered_set<
             //first query: find h1 = LCP of F[i .. |F|] and F[j .. |F|]. If h1 < |F| - j + 1 (dist_end), we will compare F[i+h1] and F[j+h1] for the answer otherwise queue query 2
             INT bestCandidate = 0;
             for (INT i = 1; i < minimizers.size(); i++){
+		//determine the distance to the end of the fragment, select the smallest distance between current position to the end of the fragment from all minimizers 
                 INT dist_end = min(j + w - max(minimizers[i].rank_pos, minimizers[bestCandidate].rank_pos), w);
                 INT h1 = 0;
+		//get the start position of the current minimizer (curPos) and the smallest minimizer (bestPos)
                 INT curPos = minimizers[i].rank_pos;            
                 INT bestPos = minimizers[bestCandidate].rank_pos;
+		//simply find LCP of F[i..|F|] and F[j..|F|]
                 for (INT k = 0; k < n; k++){
                     if (seq[curPos + k] == seq[bestPos + k]){
                         h1++;
@@ -158,16 +165,20 @@ INT bd_anchors_zlteam(unsigned char * seq, INT pos, INT w, INT k, unordered_set<
                         break;
                     }
                 }
+		//first comparison makes sure the length of LCP isnt larger than the distance to the end of the fragment, and second comparison makes sure that the current minimizer has larger inverse SA value
                 if (h1 < dist_end && invSA[bestPos] > invSA[curPos]){
                     bestCandidate = i;
                 }
                 else{
                     //second query: find h2 = LCP of F[i+h1..|F|] and F, if h2 < j - i then we compare F[i+h1+h2] and F[1 + h2] otherwise 
                     curPos = j;
+		    //update minimizer rank position 
                     bestPos += min(h1, dist_end);
+		    //calculate the new distance to end between current pos and minimum pos
                     dist_end = min(j + w - max(curPos, bestPos), w);
                     INT h2 = 0;
 
+		    //find length of LCP which is h2
                     for (INT k = 0; k < n; k++){
                         if (seq[curPos + k] == seq[bestPos + k]){
                             h2++;
@@ -176,6 +187,7 @@ INT bd_anchors_zlteam(unsigned char * seq, INT pos, INT w, INT k, unordered_set<
                             break;
                         }
                     }
+		    //similar comparison as previous
                     if (h2 < dist_end && invSA[bestPos] > invSA[curPos]){
                         bestCandidate = i;
                    }
