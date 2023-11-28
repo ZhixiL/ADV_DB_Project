@@ -48,17 +48,60 @@ INT lcs_zlteam(string & x, INT x_end, string & y, INT y_start)
     return bound-1;
 }
 
-INT red_minlexrot_zlteam( string &x, INT *f, INT n, INT r){           //find lexicographically minimum rotation, return startPos which is the starting position of the LMR
-    INT startPos = 0;
-    string curMax = x;
-    for (INT i = 0; i < n; i++){
-        x = x.substr(1, n-1) + x[0];            //perform rotation
-        if (curMax > x){                    //find lexicographically minimum rotation
-            startPos = i+1;
-            curMax = x;
+INT red_minlexrot_zlteam( string &s, INT *f, INT n, INT r){		//same as minlexrot, but with reduce parameter R so we know what to not consider
+	std::string ss = s + s;     //append the same string together to achieve something similar to a circular shift      
+    int i = 0, ans = 0;
+    
+    while (i < n) {
+        ans = i;
+        int j = i + 1, k = i;
+         
+        while (j < n + i) {     
+            if (k < n - r && ss[k] > ss[j]) {        //break the loop if smaller character is found, consider parameter R for comparison to ignore the trailing R rotations
+                break;
+            }
+            if (k < n - r && ss[k] < ss[j]) {        //otherwise update k based on the comparison of characters and increment j to move on to the next character
+                k = i;
+            } else {
+                k++;
+            }
+            j++;
+        }
+        
+        while (i <= k) {        //update i for the next iteration
+            i += j - k;
         }
     }
-    return startPos;
+    
+    return ans;
+}
+
+INT minlexrot_zlteam( string &s, INT *f, INT n){           //find lexicographically minimum rotation, return startPos which is the starting position of the LMR
+    std::string ss = s + s;     //append the same string together to achieve something similar to a circular shift      
+    int i = 0, ans = 0;
+    
+    while (i < n) {
+        ans = i;
+        int j = i + 1, k = i;
+         
+        while (j < n + i) {     
+            if (ss[k] > ss[j]) {        //break the loop if smaller character is found
+                break;
+            }
+            if (ss[k] < ss[j]) {        //otherwise update k based on the comparison of characters and increment j to move on to the next character
+                k = i;
+            } else {
+                k++;
+            }
+            j++;
+        }
+        
+        while (i <= k) {        //update i for the next iteration
+            i += j - k;
+        }
+    }
+    
+    return ans;
 }
 
 
@@ -95,31 +138,31 @@ INT red_minlexrot( string &X, INT *f, INT n, INT r )
 /* Booth's O(n)-time algorithm -- slightly adapted for efficiency */
 INT minlexrot( string &X, INT *f, INT n)
 {  
-	INT n_d = n<<1;
-  	for(INT i = 0; i < n_d; ++i)	f[i] = (INT) -1;
+	return minlexrot_zlteam(X, f, n);
+	// INT n_d = n<<1;
+  	// for(INT i = 0; i < n_d; ++i)	f[i] = (INT) -1;
 
-  	INT k = 0;
-  	for (INT j = 1; j < n_d; ++j)
-  	{
-                unsigned char sj = X[j%n];
-                INT i = f[j - k - 1];
-                while (i != (INT)-1 && sj != X[(k + i + 1)%n])
-                {
-                        if (sj < X[(k + i + 1)%n])        k = j - i - 1;
-                        i = f[i];
-                }
+  	// INT k = 0;
+  	// for (INT j = 1; j < n_d; ++j)
+  	// {
+    //             unsigned char sj = X[j%n];
+    //             INT i = f[j - k - 1];
+    //             while (i != (INT)-1 && sj != X[(k + i + 1)%n])
+    //             {
+    //                     if (sj < X[(k + i + 1)%n])        k = j - i - 1;
+    //                     i = f[i];
+    //             }
 				
-                if (i == (INT) - 1 && sj != X[(k + i + 1)%n])
-                {
-                        if (sj < X[(k+i+1)%n])    k = j;
-                        f[j - k] = -1;
-                }
-                else
-                        f[j - k] = i + 1;
-   	}
-   	return k;
+    //             if (i == (INT) - 1 && sj != X[(k + i + 1)%n])
+    //             {
+    //                     if (sj < X[(k+i+1)%n])    k = j;
+    //                     f[j - k] = -1;
+    //             }
+    //             else
+    //                     f[j - k] = i + 1;
+   	// }
+   	// return k;
 }
-
 
 /* Computes the length of lcp of two suffixes of two strings */
 INT lcp ( string & x, INT M, string & y, INT l )

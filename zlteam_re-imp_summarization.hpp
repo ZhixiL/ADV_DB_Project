@@ -54,7 +54,35 @@ INT lcs_zlteam(string & x, INT x_end, string & y, INT y_start)
 
 /* ------ FOLLOWING ARE DEDICATED FOR STEP 1: BDA-COMPUTE ------ */ 
 
-INT red_minlexrot_zlteam( string &s, INT *f, INT n, INT r){           //find lexicographically minimum rotation, return startPos which is the starting position of the LMR
+INT red_minlexrot_zlteam( string &s, INT *f, INT n, INT r){		//same as minlexrot, but with reduce parameter R so we know what to not consider
+	std::string ss = s + s;     //append the same string together to achieve something similar to a circular shift      
+    int i = 0, ans = 0;
+    
+    while (i < n) {
+        ans = i;
+        int j = i + 1, k = i;
+         
+        while (j < n + i) {     
+            if (k < n - r && ss[k] > ss[j]) {        //break the loop if smaller character is found, consider parameter R for comparison to ignore the trailing R rotations
+                break;
+            }
+            if (k < n - r && ss[k] < ss[j]) {        //otherwise update k based on the comparison of characters and increment j to move on to the next character
+                k = i;
+            } else {
+                k++;
+            }
+            j++;
+        }
+        
+        while (i <= k) {        //update i for the next iteration
+            i += j - k;
+        }
+    }
+    
+    return ans;
+}
+
+INT minlexrot_zlteam( string &s, INT *f, INT n){           //find lexicographically minimum rotation, return startPos which is the starting position of the LMR
     std::string ss = s + s;     //append the same string together to achieve something similar to a circular shift      
     int i = 0, ans = 0;
     
