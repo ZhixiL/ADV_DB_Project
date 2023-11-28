@@ -43,17 +43,32 @@ INT lcp_zlteam ( string & s1, INT s1end, string & s2, INT s2start )
 
 
 
-INT red_minlexrot_zlteam( string &x, INT *f, INT n, INT r){           //find lexicographically minimum rotation, return startPos which is the starting position of the LMR
-    INT startPos = 0;
-    string curMax = x;
-    for (INT i = 0; i < n; i++){
-        x = x.substr(1, n-1) + x[0];            //perform rotation
-        if (curMax > x){                    //find lexicographically minimum rotation
-            startPos = i+1;
-            curMax = x;
+INT red_minlexrot_zlteam( string &s, INT *f, INT n, INT r){           //find lexicographically minimum rotation, return startPos which is the starting position of the LMR
+    std::string ss = s + s;     //append the same string together to achieve something similar to a circular shift      
+    int i = 0, ans = 0;
+    
+    while (i < n) {
+        ans = i;
+        int j = i + 1, k = i;
+         
+        while (j < n + i) {     
+            if (ss[k] > ss[j]) {        //break the loop if smaller character is found
+                break;
+            }
+            if (ss[k] < ss[j]) {        //otherwise update k based on the comparison of characters and increment j to move on to the next character
+                k = i;
+            } else {
+                k++;
+            }
+            j++;
+        }
+        
+        while (i <= k) {        //update i for the next iteration
+            i += j - k;
         }
     }
-    return startPos;
+    
+    return ans;
 }
 
 
