@@ -37,7 +37,7 @@ INT LCParray ( unsigned char * text, INT n, INT * SA, INT * ISA, INT * LCP )
                 }
         return ( 1 );
 }
-
+/* ------ FOLLOWING ARE DEDICATED FOR STEP 1: BDA-COMPUTE ------ */ 
 // This is the re-implemented bd_anchor compute function that is mentioned in paper 4.1, and partly 4.2
 // on step 1. We have retained all the parameters to ensure that this function can be properly called
 // by the original construct of the program. We wrote this function based on the thorems, images, as well
@@ -456,5 +456,5 @@ INT bd_anchors(  unsigned char * seq, INT pos, INT ell, INT k, unordered_set<INT
 	// 	minimizers.clear();
 	// }
 						
-	return 0;
+	// return 0;
 }

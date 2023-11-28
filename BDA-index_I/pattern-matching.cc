@@ -11,32 +11,70 @@
 
 using namespace std;
 using namespace sdsl;
+/* ------ FOLLOWING ARE STEP 0 - Pre Implementation Practices ------ */ 
+// Initial reimplmentation of LCP core algo to get us introduced to the implemenation format of this project
+// and let us become familiar with the datatype that the authors have used.
+// This function calculates the longest common prefix between the two input strings
+// s1end scans from s1end to left all the way to 0
+// s2start scans from starts right all the way to the length of s2.
+INT lcp_zlteam ( string & s1, INT s1end, string & s2, INT s2start )
+{
+    // clear out the edge case where s1end as well as s2start is not in range.
+    if (s1end < 0 || s2start >= s2.size())
+        return 0;
+
+    // Simply match one by one to find the longest common prefix.
+    INT init_s2start = s2start;
+    while (s1end >= 0 && s2start < s2.size()) {
+        if (s1[s1end] == s2[s2start]) {
+            --s1end;
+            ++s2start;
+        } else {
+            return s2start - init_s2start;
+        }
+    }
+    return 0;
+}
+
+INT red_minlexrot_zlteam( string &x, INT *f, INT n, INT r){           //find lexicographically minimum rotation, return startPos which is the starting position of the LMR
+    INT startPos = 0;
+    string curMax = x;
+    for (INT i = 0; i < n; i++){
+        x = x.substr(1, n-1) + x[0];            //perform rotation
+        if (curMax > x){                    //find lexicographically minimum rotation
+            startPos = i+1;
+            curMax = x;
+        }
+    }
+    return startPos;
+}
 
 INT red_minlexrot( string &X, INT *f, INT n, INT r )
 {  
-	INT n_d = n<<1;
-  	for(INT i = 0; i < n_d; ++i)	f[i] = (INT) -1;
+	return red_minlexrot_zlteam(X, f, n, r);
+	// INT n_d = n<<1;
+  	// for(INT i = 0; i < n_d; ++i)	f[i] = (INT) -1;
 
-  	INT k = 0;
-  	for (INT j = 1; j < n_d; ++j)
-  	{
-                unsigned char sj = X[j%n];
-                INT i = f[j - k - 1];
-                while (i != (INT)-1 && sj != X[(k + i + 1)%n])
-                {
-                        if (sj < X[(k + i + 1)%n] && j - i - 1 < n - r )        k = j - i - 1;
-                        i = f[i];
-                }
+  	// INT k = 0;
+  	// for (INT j = 1; j < n_d; ++j)
+  	// {
+    //             unsigned char sj = X[j%n];
+    //             INT i = f[j - k - 1];
+    //             while (i != (INT)-1 && sj != X[(k + i + 1)%n])
+    //             {
+    //                     if (sj < X[(k + i + 1)%n] && j - i - 1 < n - r )        k = j - i - 1;
+    //                     i = f[i];
+    //             }
 				
-                if (i == (INT) - 1 && sj != X[(k + i + 1)%n])
-                {
-                        if (sj < X[(k+i+1)%n] && j - i - 1 < n - r )    k = j;
-                        f[j - k] = -1;
-                }
-                else
-                        f[j - k] = i + 1;
-   	}
-   	return k;
+    //             if (i == (INT) - 1 && sj != X[(k + i + 1)%n])
+    //             {
+    //                     if (sj < X[(k+i+1)%n] && j - i - 1 < n - r )    k = j;
+    //                     f[j - k] = -1;
+    //             }
+    //             else
+    //                     f[j - k] = i + 1;
+   	// }
+   	// return k;
 }
 
 
@@ -69,21 +107,25 @@ INT minlexrot( string &X, INT *f, INT n)
 }
 
 
+
+
 /* Computes the length of lcp of two suffixes of two strings */
 INT lcp ( string & x, INT M, string & y, INT l )
 {
-	INT xx = x.size();
-	if ( M >= xx ) return 0;
-	INT yy = y.size();
-	if ( l >= yy ) return 0;
+	// Replace with the rewritten funciton.
+	return lcp_zlteam(x, M, y, l);
+	// INT xx = x.size();
+	// if ( M >= xx ) return 0;
+	// INT yy = y.size();
+	// if ( l >= yy ) return 0;
 
-	INT i = 0;
-	while ( ( M + i < xx ) && ( l + i < yy ) )
-	{
-		if ( x[M+i] != y[l+i] )	break;
-		i++;
-	}
-	return i;
+	// INT i = 0;
+	// while ( ( M + i < xx ) && ( l + i < yy ) )
+	// {
+	// 	if ( x[M+i] != y[l+i] )	break;
+	// 	i++;
+	// }
+	// return i;
 }
 
 /* Searching a list of strings using LCP from "Algorithms on Strings" by Crochemore et al. Algorithm takes O(m + log n), where n is the list size and m the length of pattern */

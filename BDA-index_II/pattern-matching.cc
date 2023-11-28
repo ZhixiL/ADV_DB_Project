@@ -12,14 +12,12 @@ using namespace std;
 using namespace sdsl;
 
 
-/* ------ FOLLOWING ARE DEDICATED FOR STEP 1: BDA-COMPUTE ------ */ 
-
+/* ------ FOLLOWING ARE STEP 0 - Pre Implementation Practices ------ */ 
 // Initial reimplmentation of LCP core algo to get us introduced to the implemenation format of this project
 // and let us become familiar with the datatype that the authors have used.
 // This function calculates the longest common prefix between the two input strings
 // s1end scans from s1end to left all the way to 0
 // s2start scans from starts right all the way to the length of s2.
-INT LCParray ( unsigned char * text, INT n, INT * SA, INT * ISA, INT * LCP ); 		//this is the original LCPArray function from the github page, we are only including the declaration here so it can be used by our definition of the BDAnchors
 INT lcp_zlteam ( string & s1, INT s1end, string & s2, INT s2start )
 {
     // clear out the edge case where s1end as well as s2start is not in range.
