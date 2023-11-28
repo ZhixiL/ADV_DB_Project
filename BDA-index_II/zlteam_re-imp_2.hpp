@@ -1,10 +1,8 @@
-#ifndef ZLTEAM
-#define ZLTEAM
-
+#pragma once
 #include "stream.h"
 #include "uint40.h"
 #include <math.h>
-#include "bda-index_II.h"
+// #include "bda-index_II.h"
 #include <sdsl/bit_vectors.hpp>
 #include <sdsl/rmq_support.hpp>	
 #include <sdsl/io.hpp>
@@ -18,6 +16,7 @@ using namespace sdsl;
 // This function calculates the longest common prefix between the two input strings
 // s1end scans from s1end to left all the way to 0
 // s2start scans from starts right all the way to the length of s2.
+INT LCParray ( unsigned char * text, INT n, INT * SA, INT * ISA, INT * LCP ); 		//this is the original LCPArray function from the github page, we are only including the declaration here so it can be used by our definition of the BDAnchors
 INT lcp_zlteam ( string & s1, INT s1end, string & s2, INT s2start )
 {
     // clear out the edge case where s1end as well as s2start is not in range.
@@ -61,7 +60,7 @@ INT red_minlexrot_zlteam( string &x, INT *f, INT n, INT r){           //find lex
 #ifdef _USE_32
 #include <divsufsort.h>                                       	  // include header for suffix sort
 #endif
-#include "bda.cc" // ensure we have access to LCParray function.
+//#include "bda.cc" // ensure we have access to LCParray function.
 
 // This is the re-implemented bd_anchor compute function that is mentioned in paper 4.1, and partly 4.2
 // on step 1. We have retained all the parameters to ensure that this function can be properly called
@@ -203,7 +202,7 @@ INT bd_anchors_zlteam(unsigned char * seq, INT pos, INT w, INT k, unordered_set<
                     }
                     if (h2 < dist_end && invSA[bestPos] > invSA[curPos]){
                         bestCandidate = i;
-                    }
+                   }
                     else{
                         //third query: find h3 = LCP of F and F[j - i + 1 .. |F|]. If h3 < j - i we compare F[1 + h3] and F[j - i + 1 + h3]
                         curPos += min(h2, dist_end);
@@ -371,4 +370,3 @@ void build_LSA_LLCP_zlteam ( unordered_set<INT> &anchors, INT n, INT * LSA, INT 
     delete(SA);
 }
 
-#endif

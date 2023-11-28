@@ -7,7 +7,7 @@
 #include <sdsl/bit_vectors.hpp>                                   // include header for bit vectors
 #include <sdsl/rmq_support.hpp>	
 #include <sdsl/io.hpp>
-#include "zlteam_re-imp_2.hpp"
+//#include "zlteam_re-imp_2.hpp"
 
 using namespace std;
 using namespace sdsl;
@@ -41,7 +41,7 @@ INT LCParray ( unsigned char * text, INT n, INT * SA, INT * ISA, INT * LCP )
 /* Computes the bd-anchors of a string of length n in O(n) time */
 INT bd_anchors(  unsigned char * seq, INT pos, INT ell, INT k, unordered_set<INT> &anchors, INT * SA, INT * LCP, INT * invSA, INT * rank  )
 {
-	// return bd_anchors_zlteam(seq, pos, ell, k, anchors, SA, LCP, invSA, rank);
+ 	return bd_anchors_zlteam(seq, pos, ell, k, anchors, SA, LCP, invSA, rank);
 
 	INT w = ell;
 	INT n = strlen ( (char*) seq );

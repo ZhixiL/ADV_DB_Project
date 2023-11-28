@@ -7,6 +7,7 @@
 #include <sstream>
 #include <sdsl/bit_vectors.hpp>                                   // include header for bit vectors
 #include <sdsl/rmq_support.hpp>
+#include "zlteam_re-imp_2.hpp"
 
 #ifdef _USE_64
 typedef int64_t INT;
