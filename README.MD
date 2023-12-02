@@ -33,7 +33,11 @@ Alternatively, you could use the provided run.bash file in BDA-Index-I and BDA-I
 bash run.bash
 ```
 
-Before running the bash file, ensure that the text files are stored in /data/texts/. and the pattern files are stored in /data/pattern/.
+Before running the bash file, ensure that the text files are stored in /data/texts/. and the pattern files are stored in /data/pattern/. If the BDA-Index folders do not have a testFiles folder, make sure to create it as well using 
+```bash
+mkdir testFiles
+```
+This folder should be inside BDA-index_II/ and BDA-index_I/
 ## Data
 To obtain the dataset, use the following link: https://bit.ly/3pdViRs
 
